@@ -4,6 +4,8 @@
  * ----------------------------------------------------------------------------
  * © 2020 Stéphane Calderoni
  * ----------------------------------------------------------------------------
+ * https://rntlab.com/question/full-tutorial-esp32-remote-control-with-websocket/
+ * ESP32/ESP8266: Control Outputs with Web Server and a Physical Button Simultaneously
  */
 
 #include <Arduino.h>
@@ -114,10 +116,14 @@ void initSPIFFS() {
 // ----------------------------------------------------------------------------
 
 void setup() {
-    pinMode(led.pin,    OUTPUT);
-    pinMode(button.pin, INPUT);
-}
+    pinMode(onboard_led.pin, OUTPUT);
+    pinMode(led.pin,         OUTPUT);
+    pinMode(button.pin,      INPUT);
 
+    Serial.begin(115200); delay(500);
+
+    initSPIFFS();
+}
 // ----------------------------------------------------------------------------
 // Main control loop
 // ----------------------------------------------------------------------------

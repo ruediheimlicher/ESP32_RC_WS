@@ -18,7 +18,7 @@
 
 #define LED_PIN 26
 #define BTN_PIN 22
-
+#define HTTP_PORT 80
 // ----------------------------------------------------------------------------
 // Definition of global constants
 // ----------------------------------------------------------------------------
@@ -100,6 +100,7 @@ Led    onboard_led = { LED_BUILTIN, false };
 Led    led    = { LED_PIN, false };
 Button button = { BTN_PIN, HIGH, 0, 0 };
 
+AsyncWebServer server(HTTP_PORT);
 
 // ----------------------------------------------------------------------------
 // SPIFFS initialization

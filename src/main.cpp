@@ -146,7 +146,8 @@ void onRootRequest(AsyncWebServerRequest *request) {
 
 void initWebServer() {
     server.on("/", onRootRequest);
-    server.serveStatic("/", SPIFFS, "/");
+    server.serveStatic("/", SPIFFS, "/").setDefaultFile("index.html");
+    //server.serveStatic("/", SPIFFS, "/");
     server.begin();
 
 }
@@ -164,7 +165,9 @@ void setup() {
 
     initSPIFFS();
     initWiFi();
-
+    initWebServer();
+    // Troubles AsyncWebserver
+    // https://github.com/me-no-dev/ESPAsyncWebServer/issues/1147
 }
 // ----------------------------------------------------------------------------
 // Main control loop

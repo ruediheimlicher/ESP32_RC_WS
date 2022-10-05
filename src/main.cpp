@@ -18,6 +18,8 @@
 
 #define LED_PIN 26
 #define BTN_PIN 22
+#define LED_BUILTIN LED_BUILTIN
+#define HTTP_PORT 80
 
 // ----------------------------------------------------------------------------
 // Definition of global constants
@@ -29,6 +31,14 @@ const uint8_t DEBOUNCE_DELAY = 10; // in milliseconds
 // WiFi credentials
 const char *WIFI_SSID = "AP RE";
 const char *WIFI_PASS = "eiramsor44wl";
+
+
+/ ----------------------------------------------------------------------------
+// Definition of global variables
+// ----------------------------------------------------------------------------
+//Led    onboard_led = { LED_BUILTIN, false };
+
+
 
 // ----------------------------------------------------------------------------
 // Definition of the LED component
@@ -99,7 +109,7 @@ struct Button {
 Led    onboard_led = { LED_BUILTIN, false };
 Led    led    = { LED_PIN, false };
 Button button = { BTN_PIN, HIGH, 0, 0 };
-
+AsyncWebServer server(HTTP_PORT);
 
 // ----------------------------------------------------------------------------
 // SPIFFS initialization

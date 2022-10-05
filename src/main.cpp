@@ -12,6 +12,7 @@
 #include <SPIFFS.h>
 #include <WiFi.h>
 #include <ESPAsyncWebServer.h>
+#include <ArduinoJson.h>
 // ----------------------------------------------------------------------------
 // Definition of macros
 // ----------------------------------------------------------------------------
@@ -157,14 +158,6 @@ void initWebServer() {
 // WebSocket initialization
 // ----------------------------------------------------------------------------
 
-void initWebSocket() {
-    server.addHandler(&ws);
-}
-
-// ----------------------------------------------------------------------------
-// WebSocket initialization
-// ----------------------------------------------------------------------------
-
 void onEvent(AsyncWebSocket       *server,  //
              AsyncWebSocketClient *client,  //
              AwsEventType          type,    // the signature of this function is defined
@@ -174,7 +167,29 @@ void onEvent(AsyncWebSocket       *server,  //
 
     // we are going to add here the handling of
     // the different events defined by the protocol
+    switch (type) {
+        case WS_EVT_CONNECT:
+            Serial.printf("WebSocket client #%u has been connected from %s\n", client->id(), client->remoteIP().toString().c_str());
+            break;
+        case WS_EVT_DISCONNECT:
+            Serial.printf("WebSocket client #%u is now disconnected\n", client->id());
+            break;
+        case WS_EVT_DATA:
+        case WS_EVT_PONG:
+        case WS_EVT_ERROR:
+            break;
+    }
 }
+
+void initWebSocket() 
+{
+  ws.onEvent(onEvent);
+  server.addHandler(&ws);
+    
+}
+
+
+
 // ----------------------------------------------------------------------------
 // Initialization
 // ----------------------------------------------------------------------------
@@ -193,14 +208,33 @@ void setup() {
     // Troubles AsyncWebserver
     // https://github.com/me-no-dev/ESPAsyncWebServer/issues/1147
 }
+
+
+// ----------------------------------------------------------------------------
+// Sending data to WebSocket clients
+// ----------------------------------------------------------------------------
+
+void notifyClients() {
+    char buffer[17];
+    sprintf(buffer, "{\"status\":\"%s\"}", led.on ? "on" : "off");
+    ws.textAll(buffer);
+}
+
 // ----------------------------------------------------------------------------
 // Main control loop
 // ----------------------------------------------------------------------------
 
-void loop() {
+void loop() 
+{
+  ws.cleanupClients(); // <-- add this line
     button.read();
 
-    if (button.pressed()) led.on = !led.on;
+    if (button.pressed()) 
+    {
+      led.on = !led.on;
+      notifyClients();
+
+    }
     onboard_led.on = millis() % 1000 < 50;
 
     led.update();

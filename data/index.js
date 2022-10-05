@@ -9,6 +9,7 @@
 var gateway = `ws://${window.location.hostname}/ws`;
 var websocket;
 
+
 // ----------------------------------------------------------------------------
 // Initialization
 // ----------------------------------------------------------------------------
@@ -42,8 +43,15 @@ function onClose(event) {
 }
 
 function onMessage(event) {
+
+    document.getElementById('led').className = event.data;
+    console.log(`Received a notification from ${event.origin}`);
+    console.log(event);
+    
+    //console.log(`Received a notification from ${event.origin}`);
     let data = JSON.parse(event.data);
     document.getElementById('led').className = data.status;
+    
 }
 
 // ----------------------------------------------------------------------------
@@ -57,3 +65,4 @@ function initButton() {
 function onToggle(event) {
     websocket.send(JSON.stringify({'action':'toggle'}));
 }
+

@@ -161,7 +161,20 @@ void initWebSocket() {
     server.addHandler(&ws);
 }
 
+// ----------------------------------------------------------------------------
+// WebSocket initialization
+// ----------------------------------------------------------------------------
 
+void onEvent(AsyncWebSocket       *server,  //
+             AsyncWebSocketClient *client,  //
+             AwsEventType          type,    // the signature of this function is defined
+             void                 *arg,     // by the `AwsEventHandler` interface
+             uint8_t              *data,    //
+             size_t                len) {   //
+
+    // we are going to add here the handling of
+    // the different events defined by the protocol
+}
 // ----------------------------------------------------------------------------
 // Initialization
 // ----------------------------------------------------------------------------

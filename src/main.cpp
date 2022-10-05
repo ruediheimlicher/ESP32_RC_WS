@@ -101,6 +101,7 @@ Led    led    = { LED_PIN, false };
 Button button = { BTN_PIN, HIGH, 0, 0 };
 
 AsyncWebServer server(HTTP_PORT);
+AsyncWebSocket ws("/ws");
 
 // ----------------------------------------------------------------------------
 // SPIFFS initialization
@@ -153,6 +154,15 @@ void initWebServer() {
 }
 
 // ----------------------------------------------------------------------------
+// WebSocket initialization
+// ----------------------------------------------------------------------------
+
+void initWebSocket() {
+    server.addHandler(&ws);
+}
+
+
+// ----------------------------------------------------------------------------
 // Initialization
 // ----------------------------------------------------------------------------
 
@@ -165,6 +175,7 @@ void setup() {
 
     initSPIFFS();
     initWiFi();
+    initWebSocket(); // <-- add this line
     initWebServer();
     // Troubles AsyncWebserver
     // https://github.com/me-no-dev/ESPAsyncWebServer/issues/1147

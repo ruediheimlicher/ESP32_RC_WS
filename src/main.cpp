@@ -133,6 +133,23 @@ void initWiFi() {
   Serial.printf(" %s\n", WiFi.localIP().toString().c_str());
 }
 
+// ----------------------------------------------------------------------------
+// init Webserver
+// ----------------------------------------------------------------------------
+String processor(const String &var) {
+    return String(var == "STATE" && led.on ? "on" : "off");
+}
+
+void onRootRequest(AsyncWebServerRequest *request) {
+  request->send(SPIFFS, "/index.html", "text/html", false, processor);
+}
+
+void initWebServer() {
+    server.on("/", onRootRequest);
+    server.serveStatic("/", SPIFFS, "/");
+    server.begin();
+
+}
 
 // ----------------------------------------------------------------------------
 // Initialization
@@ -147,6 +164,7 @@ void setup() {
 
     initSPIFFS();
     initWiFi();
+
 }
 // ----------------------------------------------------------------------------
 // Main control loop

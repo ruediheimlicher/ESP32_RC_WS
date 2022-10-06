@@ -17,8 +17,10 @@ var websocket;
 window.addEventListener('load', onLoad);
 
 function onLoad(event) {
+    console.log('onLoad begin');
     initWebSocket();
     initButton();
+    console.log('onLoad endn');
 }
 
 // ----------------------------------------------------------------------------
@@ -45,10 +47,10 @@ function onClose(event) {
 function onMessage(event) {
 
     document.getElementById('led').className = event.data;
-    console.log(`Received a notification from ${event.origin}`);
+    //console.log(`Received a notification from ${event.origin}`);
     console.log(event);
     
-    //console.log(`Received a notification from ${event.origin}`);
+    console.log(`Received a notification from ${event.origin}`);
     let data = JSON.parse(event.data);
     document.getElementById('led').className = data.status;
     
@@ -63,6 +65,8 @@ function initButton() {
 }
 
 function onToggle(event) {
+    console.log('onToggle begin');
     websocket.send(JSON.stringify({'action':'toggle'}));
+    console.log('onToggle end');
 }
 

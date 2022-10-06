@@ -31,6 +31,7 @@ const uint8_t DEBOUNCE_DELAY = 10; // in milliseconds
 const char *WIFI_SSID = "AP RE";
 const char *WIFI_PASS = "eiramsor44wl";
 
+
 // ----------------------------------------------------------------------------
 // Definition of the LED component
 // ----------------------------------------------------------------------------
@@ -153,6 +154,49 @@ void initWebServer() {
     server.begin();
 
 }
+// ----------------------------------------------------------------------------
+// Sending data to WebSocket clients
+// ----------------------------------------------------------------------------
+
+void notifyClients() {
+    char buffer[17];
+    Serial.println(F("notifyClients OK"));
+    const uint8_t size = JSON_OBJECT_SIZE(1);
+    StaticJsonDocument<size> json;
+    json["status"] = led.on ? "on" : "off";
+
+    char data[17];
+    size_t len = serializeJson(json, data);
+    ws.textAll(data, len);
+
+   // sprintf(buffer, "{\"status\":\"%s\"}", led.on ? "on" : "off");
+   // ws.textAll(buffer);
+
+
+}
+void handleWebSocketMessage(void *arg, uint8_t *data, size_t len) {
+    AwsFrameInfo *info = (AwsFrameInfo*)arg;
+    Serial.println(F("handleWebSocketMessage OK"));
+    if (info->final && info->index == 0 && info->len == len && info->opcode == WS_TEXT) {
+
+        const uint8_t size = JSON_OBJECT_SIZE(1);
+        
+        StaticJsonDocument<size> json;
+        DeserializationError err = deserializeJson(json, data);
+        if (err) {
+            Serial.print(F("deserializeJson() failed with code "));
+            Serial.println(err.c_str());
+            return;
+        }
+        Serial.print(F("deserializeJson() OK"));
+        const char *action = json["action"];
+        if (strcmp(action, "toggle") == 0) {
+            led.on = !led.on;
+            notifyClients();
+        }
+        
+    }
+}
 
 // ----------------------------------------------------------------------------
 // WebSocket initialization
@@ -175,6 +219,9 @@ void onEvent(AsyncWebSocket       *server,  //
             Serial.printf("WebSocket client #%u is now disconnected\n", client->id());
             break;
         case WS_EVT_DATA:
+          Serial.printf("WS_EVT_DATA");
+          handleWebSocketMessage(arg, data, len);
+          break;
         case WS_EVT_PONG:
         case WS_EVT_ERROR:
             break;
@@ -210,15 +257,7 @@ void setup() {
 }
 
 
-// ----------------------------------------------------------------------------
-// Sending data to WebSocket clients
-// ----------------------------------------------------------------------------
 
-void notifyClients() {
-    char buffer[17];
-    sprintf(buffer, "{\"status\":\"%s\"}", led.on ? "on" : "off");
-    ws.textAll(buffer);
-}
 
 // ----------------------------------------------------------------------------
 // Main control loop

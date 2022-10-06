@@ -48,7 +48,7 @@ function onMessage(event) {
 
     document.getElementById('led').className = event.data;
     //console.log(`Received a notification from ${event.origin}`);
-    console.log(event);
+   // console.log(event);
     
     console.log(`Received a notification from ${event.origin}`);
     let data = JSON.parse(event.data);
@@ -65,8 +65,8 @@ function initButton() {
 }
 
 function onToggle(event) {
-    console.log('onToggle begin');
+////    console.log('onToggle begin');
     websocket.send(JSON.stringify({'action':'toggle'}));
-    console.log('onToggle end');
+ //   console.log('onToggle end');
 }
 

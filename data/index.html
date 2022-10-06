@@ -11,6 +11,8 @@
   <link rel="icon" type="image/x-icon" href="favicon.ico">
   <link rel="stylesheet" href="index.css">
   <script src="index.js"></script>
+  
+
 </head>
 
 <body>
@@ -18,6 +20,11 @@
     <h1>ESP32 remote control</h1>
     <div id="led" class="%STATE%"></div>
     <button id="toggle">Toggle</button>
+
+    
+    <p><span id="textsliderValue">%SLIDERVALUE%</span></p>
+    <p><input type="range" onchange="updateSliderPWM(this)" id="pwmSlider" min="0" max="255" value="%SLIDERVALUE%" step="1" class="slider"></p>
+  
   </div>
 </body>
 

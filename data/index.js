@@ -17,11 +17,19 @@ var websocket;
 window.addEventListener('load', onLoad);
 
 function onLoad(event) {
-    console.log('onLoad begin');
+    //console.log('onLoad begin');
     initWebSocket();
     initButton();
-    console.log('onLoad endn');
+    //console.log('onLoad endn');
 }
+function updateSliderPWM(element) {
+    var sliderValue = document.getElementById("pwmSlider").value;
+    document.getElementById("textSliderValue").innerHTML = sliderValue;
+    console.log(sliderValue);
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", "/slider?value="+sliderValue, true);
+    xhr.send();
+  }
 
 // ----------------------------------------------------------------------------
 // WebSocket handling
@@ -70,3 +78,7 @@ function onToggle(event) {
  //   console.log('onToggle end');
 }
 
+function onChange(event)
+{
+    console.log('onchange begin');
+}

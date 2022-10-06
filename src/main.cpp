@@ -97,6 +97,7 @@ struct Button {
 // ----------------------------------------------------------------------------
 // Definition of global variables
 // ----------------------------------------------------------------------------
+String sliderValue = "64";
 
 Led    onboard_led = { LED_BUILTIN, false };
 Led    led    = { LED_PIN, false };
@@ -139,8 +140,19 @@ void initWiFi() {
 // ----------------------------------------------------------------------------
 // init Webserver
 // ----------------------------------------------------------------------------
-String processor(const String &var) {
+String processor(const String &var) 
+{
+  if (var == "STATE")
+  {
     return String(var == "STATE" && led.on ? "on" : "off");
+  }
+    
+if (var == "SLIDERVALUE")
+{
+  Serial.printf("slidervalue");
+    return sliderValue;
+  }
+return String();
 }
 
 void onRootRequest(AsyncWebServerRequest *request) {
